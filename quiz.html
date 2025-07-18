@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quizzes | Study Vault</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary-color: #2DD4BF;
+            --background-color: #111827;
+            --card-background: rgba(31, 41, 55, 0.7); /* Semi-transparent for glass effect */
+            --text-primary: #F9FAFB;
+            --text-secondary: #9CA3AF;
+            --border-color: rgba(55, 65, 81, 0.8);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=2670&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            padding: 20px;
+            padding-bottom: 120px; /* Extra space for floating nav */
+        }
+        .header-widget {
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .time-info #clock {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .time-info #date {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+        .main-content { padding: 0; }
+        .accordion-item {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0; /* Start hidden for animation */
+        }
+        /* Staggered animation for accordion items */
+        .accordion-item:nth-child(1) { animation-delay: 0.1s; }
+        .accordion-item:nth-child(2) { animation-delay: 0.2s; }
+        .accordion-item:nth-child(3) { animation-delay: 0.3s; }
+        .accordion-item:nth-child(4) { animation-delay: 0.4s; }
+        .accordion-item:nth-child(5) { animation-delay: 0.5s; }
+        .accordion-item:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            cursor: pointer;
+        }
+        .accordion-header h2 { font-size: 18px; font-weight: 600; }
+        .accordion-header .icon { font-size: 24px; transition: transform 0.3s ease; }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            text-align: center;
+        }
+        .accordion-item.active .accordion-header .icon { transform: rotate(90deg); }
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+            padding: 0 5px 5px 5px;
+        }
+        .no-content-message { color: var(--text-secondary); padding: 20px; text-align: center; }
+        .folder-link-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 15px;
+            background-color: var(--primary-color);
+            color: #111827;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+        .folder-link-button:hover {
+            background-color: #26a28d;
+        }
+        .folder-link-button i {
+            vertical-align: middle;
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 500px;
+            height: 70px;
+            background: rgba(31, 41, 55, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+        .nav-link i { font-size: 24px; }
+        .nav-link span { font-size: 12px; margin-top: 5px; }
+        .nav-link.active, .nav-link:hover { color: var(--primary-color); }
+    </style>
+</head>
+<body>
+    <header class="header-widget">
+        <div class="time-info">
+            <div id="clock"></div>
+            <div id="date"></div>
+        </div>
+    </header>
+    <main class="main-content">
+        <div id="accordion-container"></div>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="PROJECT.html" class="nav-link">
+            <i class='bx bxs-home'></i>
+            <span>Home</span>
+        </a>
+        <a href="assignments.html" class="nav-link">
+            <i class='bx bx-briefcase-alt'></i>
+            <span>Assignments</span>
+        </a>
+        <a href="quiz.html" class="nav-link active">
+            <i class='bx bx-edit'></i>
+            <span>Quizzes</span>
+        </a>
+        <a href="notes.html" class="nav-link">
+            <i class='bx bxs-notepad'></i>
+            <span>Notes</span>
+        </a>
+      
+    </nav>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const clockEl = document.getElementById('clock');
+            const dateEl = document.getElementById('date');
+            
+            if (clockEl && dateEl) {
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                clockEl.textContent = `${hours}:${minutes}`;
+
+                const options = { weekday: 'long', month: 'long', day: 'numeric' };
+                dateEl.textContent = now.toLocaleDateString(undefined, options);
+            }
+        }
+
+        // --- DATA SOURCE ---
+        const subjectMap = {
+            "AI": "Artificial Intelligence",
+            "CN": "Computer Network",
+            "SE": "Software Engineering",
+            "DSA": "Data Structures & Algorithms",
+            "IS": "Information Security",
+            "PPS": "Programming Professional Skills"
+        };
+
+        const subjectFolderLinks = {
+            "AI": "https://drive.google.com/drive/folders/18-PpjWiLjCqH3J-vKLqASgbk46ACDLx7?usp=drive_link", // Add your AI quizzes folder link here
+            "CN": "https://drive.google.com/drive/folders/1pvgXSCMpqvUhzStf0rOgK2mv3BVeP2m8?usp=drive_link", // Add your Computer Network quizzes folder link here
+            "SE": "https://drive.google.com/drive/folders/1YojNtalz1sBdoFMFLGdMLl-6NQ8ZgsZN?usp=drive_link", // Add your Software Engineering quizzes folder link here
+            "DSA": "https://drive.google.com/drive/folders/11CqUS8ZZt_8LgUDVElAmBL8S6wmuWjRk?usp=drive_link", // Add your DSA quizzes folder link here
+            "IS": "https://drive.google.com/drive/folders/18c9qamPf5JkzjBEYCl56OO5rOsizZCzh?usp=drive_link", // Add your Information Security quizzes folder link here
+            "PPS": "https://drive.google.com/drive/folders/1NNvJ0GF5ZZouwWMbS1ok7PRzeh4DtqhU?usp=drive_link"  // Add your PPS quizzes folder link here
+        };
+
+        const subjects = Object.keys(subjectMap);
+        const accordionContainer = document.getElementById("accordion-container");
+
+        subjects.forEach(subjectKey => {
+            const subjectFullName = subjectMap[subjectKey];
+            const item = document.createElement('div');
+            item.className = 'accordion-item';
+            item.innerHTML = `
+                <div class="accordion-header" data-subject="${subjectKey}">
+                    <h2>${subjectFullName}</h2>
+                    <i class='bx bx-chevron-right icon'></i>
+                </div>
+                <div class="accordion-content"></div>
+            `;
+            accordionContainer.appendChild(item);
+        });
+
+        document.querySelectorAll(".accordion-header").forEach(header => {
+            header.addEventListener("click", () => {
+                const item = header.parentElement;
+                const contentDiv = item.querySelector('.accordion-content');
+                const subjectKey = header.dataset.subject;
+                const isActive = item.classList.contains("active");
+
+                document.querySelectorAll(".accordion-item").forEach(otherItem => {
+                    otherItem.classList.remove("active");
+                });
+
+                if (!isActive) {
+                    item.classList.add("active");
+                }
+                
+                contentDiv.innerHTML = "";
+
+                if (item.classList.contains("active")) {
+                    const folderUrl = subjectFolderLinks[subjectKey];
+                    if (folderUrl && folderUrl !== "#") {
+                        const folderLink = document.createElement('a');
+                        folderLink.href = folderUrl;
+                        folderLink.target = "_blank";
+                        folderLink.rel = "noopener noreferrer";
+                        folderLink.className = "folder-link-button";
+                        folderLink.innerHTML = `<i class='bx bxs-folder-open'></i> Open Subject Folder`;
+                        contentDiv.appendChild(folderLink);
+                    } else {
+                        contentDiv.innerHTML = '<p class="no-content-message">No folder link is available for this subject.</p>';
+                    }
+                }
+            });
+        });
+
+        // Initial call to display time immediately
+        updateTime();
+        // Update the time every second
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
