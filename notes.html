@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quizzes | Study Vault</title>
+    <title>Notes | Study Vault</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
-            --primary-color: #2DD4BF;
-            --background-color: #111827;
-            --card-background: rgba(31, 41, 55, 0.7); /* Semi-transparent for glass effect */
+            --primary-color: #F9FAFB; /* Changed to white for a monochrome look */
+            --background-color: #000000; /* Darker background */
+            --card-background: rgba(25, 25, 25, 0.6); /* Darker glass effect */
             --text-primary: #F9FAFB;
-            --text-secondary: #9CA3AF;
-            --border-color: rgba(55, 65, 81, 0.8);
+            --text-secondary: #A0A0A0; /* Lighter grey for contrast */
+            --border-color: rgba(55, 65, 81, 0.6);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -26,6 +26,9 @@
             background-attachment: fixed;
             color: var(--text-primary);
             padding: 20px;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            display: flex; /* Enable flexbox */
+            flex-direction: column; /* Arrange children in a column */
             padding-bottom: 120px; /* Extra space for floating nav */
         }
         .header-widget {
@@ -48,7 +51,10 @@
             font-size: 16px;
             opacity: 0.8;
         }
-        .main-content { padding: 0; }
+        .main-content { 
+            flex-grow: 1; /* Allow main content to take up available space */
+            padding: 0; 
+        }
         .accordion-item {
             background-color: var(--card-background);
             border: 1px solid var(--border-color);
@@ -112,6 +118,15 @@
             margin-right: 8px;
             font-size: 20px;
         }
+        .footer {
+            text-align: center;
+            margin-top: auto; /* Push the footer to the bottom */
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            padding-top: 20px; /* Add some space above the footer */
+        }
         .bottom-nav {
             position: fixed;
             bottom: 20px;
@@ -120,7 +135,7 @@
             width: calc(100% - 40px);
             max-width: 500px;
             height: 70px;
-            background: rgba(31, 41, 55, 0.7);
+            background: rgba(25, 25, 25, 0.7);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             display: flex;
@@ -154,6 +169,10 @@
         <div id="accordion-container"></div>
     </main>
 
+    <footer class="footer">
+        <p>&copy; <span id="year"></span> Muhammad Saad Abbas. All Rights Reserved.</p>
+    </footer>
+
     <nav class="bottom-nav">
         <a href="index.html" class="nav-link">
             <i class='bx bxs-home'></i>
@@ -163,11 +182,11 @@
             <i class='bx bx-briefcase-alt'></i>
             <span>Assignments</span>
         </a>
-        <a href="quiz.html" class="nav-link active">
+        <a href="quiz.html" class="nav-link">
             <i class='bx bx-edit'></i>
             <span>Quizzes</span>
         </a>
-        <a href="notes.html" class="nav-link">
+        <a href="notes.html" class="nav-link"> 
             <i class='bx bxs-notepad'></i>
             <span>Notes</span>
         </a>
@@ -179,6 +198,7 @@
             const clockEl = document.getElementById('clock');
             const dateEl = document.getElementById('date');
             
+            // Ensure elements exist before updating
             if (clockEl && dateEl) {
                 const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
                 clockEl.textContent = now.toLocaleTimeString('en-US', timeOptions);
@@ -186,6 +206,20 @@
                 const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
                 dateEl.textContent = now.toLocaleDateString('en-US', dateOptions);
             }
+        }
+
+        function setActiveNavLink() {
+            const navLinks = document.querySelectorAll('.bottom-nav .nav-link');
+            // Get the current page's filename (e.g., "notes.html")
+            const currentPath = window.location.pathname.split('/').pop(); 
+
+            navLinks.forEach(link => {
+                link.classList.remove('active'); // Remove active from all links first
+                const linkHref = link.getAttribute('href');
+                if (linkHref === currentPath) {
+                    link.classList.add('active'); // Add active to the matching link
+                }
+            });
         }
 
         // --- DATA SOURCE ---
@@ -199,69 +233,85 @@
         };
 
         const subjectFolderLinks = {
-            "AI": "https://drive.google.com/drive/folders/18-PpjWiLjCqH3J-vKLqASgbk46ACDLx7?usp=sharing",
-            "CN": "https://drive.google.com/drive/folders/1pvgXSCMpqvUhzStf0rOgK2mv3BVeP2m8?usp=sharing",
-            "SE": "https://drive.google.com/drive/folders/1YojNtalz1sBdoFMFLGdMLl-6NQ8ZgsZN?usp=sharing",
-            "DSA": "https://drive.google.com/drive/folders/11CqUS8ZZt_8LgUDVElAmBL8S6wmuWjRk?usp=sharing",
-            "IS": "https://drive.google.com/drive/folders/18c9qamPf5JkzjBEYCl56OO5rOsizZCzh?usp=sharing",
-            "PPS": "https://drive.google.com/drive/folders/1NNvJ0GF5ZZouwWMbS1ok7PRzeh4DtqhU?usp=sharing"
+            "AI": "https://drive.google.com/drive/folders/1S2KSw5ECjukgxTv2TQ-i4-35wlBMGxHF?usp=sharing",
+            "CN": "https://drive.google.com/drive/folders/1mLu5pNAfpBRJQclZkJ8HeTA-wbFb8g4O?usp=sharing",
+            "SE": "https://drive.google.com/drive/folders/1OCUXzhG6dZxVz1EiDm-9FEXdS9DT36RC?usp=sharing",
+            "DSA": "https://drive.google.com/drive/folders/1GBIlGnoEEkZB7tfRzJzUNINOlHpcsgIP?usp=sharing",
+            "IS": "https://drive.google.com/drive/folders/1Lsh1yMGdu88Qzf83tZpx3nR-gWV3mory?usp=sharing",
+            "PPS": "https://drive.google.com/drive/folders/1GXGEEhoSnh_0NsW_3MQ0K45mwx4d-rws?usp=sharing"
         };
 
         const subjects = Object.keys(subjectMap);
         const accordionContainer = document.getElementById("accordion-container");
 
-        subjects.forEach(subjectKey => {
-            const subjectFullName = subjectMap[subjectKey];
-            const item = document.createElement('div');
-            item.className = 'accordion-item';
-            item.innerHTML = `
-                <div class="accordion-header" data-subject="${subjectKey}">
-                    <h2>${subjectFullName}</h2>
-                    <i class='bx bx-chevron-right icon'></i>
-                </div>
-                <div class="accordion-content"></div>
-            `;
-            accordionContainer.appendChild(item);
-        });
-
-        document.querySelectorAll(".accordion-header").forEach(header => {
-            header.addEventListener("click", () => {
-                const item = header.parentElement;
-                const contentDiv = item.querySelector('.accordion-content');
-                const subjectKey = header.dataset.subject;
-                const isActive = item.classList.contains("active");
-
-                document.querySelectorAll(".accordion-item").forEach(otherItem => {
-                    otherItem.classList.remove("active");
-                });
-
-                if (!isActive) {
-                    item.classList.add("active");
-                }
-                
-                contentDiv.innerHTML = "";
-
-                if (item.classList.contains("active")) {
-                    const folderUrl = subjectFolderLinks[subjectKey];
-                    if (folderUrl && folderUrl !== "#") {
-                        const folderLink = document.createElement('a');
-                        folderLink.href = folderUrl;
-                        folderLink.target = "_blank";
-                        folderLink.rel = "noopener noreferrer";
-                        folderLink.className = "folder-link-button";
-                        folderLink.innerHTML = `<i class='bx bxs-folder-open'></i> Open Subject Folder`;
-                        contentDiv.appendChild(folderLink);
-                    } else {
-                        contentDiv.innerHTML = '<p class="no-content-message">No folder link is available for this subject.</p>';
-                    }
-                }
+        // Generate accordion items dynamically
+        if (accordionContainer) {
+            subjects.forEach(subjectKey => {
+                const subjectFullName = subjectMap[subjectKey];
+                const item = document.createElement('div');
+                item.className = 'accordion-item';
+                item.innerHTML = `
+                    <div class="accordion-header" data-subject="${subjectKey}">
+                        <h2>${subjectFullName}</h2>
+                        <i class='bx bx-chevron-right icon'></i>
+                    </div>
+                    <div class="accordion-content"></div>
+                `;
+                accordionContainer.appendChild(item);
             });
-        });
 
-        // Initial call to display time immediately
-        updateTime();
-        // Update the time every second
-        setInterval(updateTime, 1000);
+            // Add event listeners to accordion headers
+            document.querySelectorAll(".accordion-header").forEach(header => {
+                header.addEventListener("click", () => {
+                    const item = header.parentElement;
+                    const contentDiv = item.querySelector('.accordion-content');
+                    const subjectKey = header.dataset.subject;
+                    const isActive = item.classList.contains("active");
+
+                    // Close all other active accordion items
+                    document.querySelectorAll(".accordion-item.active").forEach(otherItem => {
+                        if (otherItem !== item) { // Only close if it's not the current item
+                            otherItem.classList.remove("active");
+                        }
+                    });
+
+                    // Toggle active class for the clicked item
+                    if (!isActive) {
+                        item.classList.add("active");
+                    } else {
+                        item.classList.remove("active");
+                    }
+                    
+                    // Clear previous content
+                    contentDiv.innerHTML = "";
+
+                    // Populate content if active
+                    if (item.classList.contains("active")) {
+                        const folderUrl = subjectFolderLinks[subjectKey];
+                        if (folderUrl && folderUrl !== "#") {
+                            const folderLink = document.createElement('a');
+                            folderLink.href = folderUrl;
+                            folderLink.target = "_blank";
+                            folderLink.rel = "noopener noreferrer";
+                            folderLink.className = "folder-link-button";
+                            folderLink.innerHTML = `<i class='bx bxs-folder-open'></i> Open Subject Folder`;
+                            contentDiv.appendChild(folderLink);
+                        } else {
+                            contentDiv.innerHTML = '<p class="no-content-message">No folder link is available for this subject.</p>';
+                        }
+                    }
+                });
+            });
+        }
+
+
+        // --- Initial Calls ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTime();
+            setInterval(updateTime, 1000);
+            document.getElementById('year').textContent = new Date().getFullYear();
+            setActiveNavLink(); // Call this function on page load
+        });
     </script>
 </body>
 </html>

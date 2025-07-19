@@ -184,7 +184,7 @@
     </footer>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-link active">
+        <a href="index.html" class="nav-link">
             <i class='bx bxs-home'></i>
             <span>Home</span>
         </a>
@@ -196,7 +196,7 @@
             <i class='bx bx-edit'></i>
             <span>Quizzes</span>
         </a>
-        <a href="notes.html" class="nav-link">
+        <a href="notes.html" class="nav-link"> 
             <i class='bx bxs-notepad'></i>
             <span>Notes</span>
         </a>
@@ -217,11 +217,25 @@
             dateEl.textContent = now.toLocaleDateString('en-US', dateOptions);
         }
 
+        function setActiveNavLink() {
+            const navLinks = document.querySelectorAll('.bottom-nav .nav-link');
+            const currentPath = window.location.pathname.split('/').pop(); // Get filename (e.g., "index.html")
+
+            navLinks.forEach(link => {
+                link.classList.remove('active'); // Remove active from all links first
+                const linkHref = link.getAttribute('href');
+                if (linkHref === currentPath) {
+                    link.classList.add('active'); // Add active to the matching link
+                }
+            });
+        }
+
         // --- Initial Calls ---
         document.addEventListener('DOMContentLoaded', () => {
             updateTime();
             setInterval(updateTime, 1000);
             document.getElementById('year').textContent = new Date().getFullYear();
+            setActiveNavLink(); // Call this function on page load
         });
     </script>
 </body>
