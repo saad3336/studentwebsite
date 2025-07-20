@@ -171,7 +171,6 @@
             <i class='bx bxs-notepad'></i>
             <span>Notes</span>
         </a>
-        
     </nav>
 
     <script>
@@ -181,12 +180,11 @@
             const dateEl = document.getElementById('date');
             
             if (clockEl && dateEl) {
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                clockEl.textContent = `${hours}:${minutes}`;
+                const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+                clockEl.textContent = now.toLocaleTimeString('en-US', timeOptions);
 
-                const options = { weekday: 'long', month: 'long', day: 'numeric' };
-                dateEl.textContent = now.toLocaleDateString(undefined, options);
+                const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
+                dateEl.textContent = now.toLocaleDateString('en-US', dateOptions);
             }
         }
 
@@ -201,12 +199,12 @@
         };
 
         const subjectFolderLinks = {
-            "AI": "https://drive.google.com/drive/folders/1_EZFNl3Wzk4s9mHe7dXJeuVP40dhLxBq?usp=sharing", // Add your AI assignments folder link here
-            "CN": "https://drive.google.com/drive/folders/1t6ANNbDEmLhkvq1p2g3CLjdmfkbPYQxd?usp=sharing", // Add your Computer Network assignments folder link here
-            "SE": "https://drive.google.com/drive/folders/1s61wiyPU_EWTCk_pj5I_FQi-cYuAu_TD?usp=sharing", // Add your Software Engineering assignments folder link here
-            "DSA": "https://drive.google.com/drive/folders/161Yu0gR9dIXTxdwoNoH_X7bT9PtcIV09?usp=sharing", // Add your DSA assignments folder link here
-            "IS": "https://drive.google.com/drive/folders/1pwAbt3pwz61dijVK6HgY5g_iT8STru33?usp=sharing", // Add your Information Security assignments folder link here
-            "PPS": "https://drive.google.com/drive/folders/1wtEv7thkmuLcb-1Sa-dyi1-bgSxqcY4G?usp=sharing"  // Add your PPS assignments folder link here
+            "AI": "https://drive.google.com/drive/folders/1_EZFNl3Wzk4s9mHe7dXJeuVP40dhLxBq?usp=sharing",
+            "CN": "https://drive.google.com/drive/folders/1t6ANNbDEmLhkvq1p2g3CLjdmfkbPYQxd?usp=sharing",
+            "SE": "https://drive.google.com/drive/folders/1s61wiyPU_EWTCk_pj5I_FQi-cYuAu_TD?usp=sharing",
+            "DSA": "https://drive.google.com/drive/folders/161Yu0gR9dIXTxdwoNoH_X7bT9PtcIV09?usp=sharing",
+            "IS": "https://drive.google.com/drive/folders/1pwAbt3pwz61dijVK6HgY5g_iT8STru33?usp=sharing",
+            "PPS": "https://drive.google.com/drive/folders/1wtEv7thkmuLcb-1Sa-dyi1-bgSxqcY4G?usp=sharing"
         };
 
         const subjects = Object.keys(subjectMap);

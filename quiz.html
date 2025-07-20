@@ -171,7 +171,6 @@
             <i class='bx bxs-notepad'></i>
             <span>Notes</span>
         </a>
-      
     </nav>
 
     <script>
@@ -181,12 +180,11 @@
             const dateEl = document.getElementById('date');
             
             if (clockEl && dateEl) {
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                clockEl.textContent = `${hours}:${minutes}`;
+                const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+                clockEl.textContent = now.toLocaleTimeString('en-US', timeOptions);
 
-                const options = { weekday: 'long', month: 'long', day: 'numeric' };
-                dateEl.textContent = now.toLocaleDateString(undefined, options);
+                const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
+                dateEl.textContent = now.toLocaleDateString('en-US', dateOptions);
             }
         }
 
@@ -201,12 +199,12 @@
         };
 
         const subjectFolderLinks = {
-            "AI": "https://drive.google.com/drive/folders/18-PpjWiLjCqH3J-vKLqASgbk46ACDLx7?usp=sharing", // Add your AI quizzes folder link here
-            "CN": "https://drive.google.com/drive/folders/1pvgXSCMpqvUhzStf0rOgK2mv3BVeP2m8?usp=sharing", // Add your Computer Network quizzes folder link here
-            "SE": "https://drive.google.com/drive/folders/1YojNtalz1sBdoFMFLGdMLl-6NQ8ZgsZN?usp=sharing", // Add your Software Engineering quizzes folder link here
-            "DSA": "https://drive.google.com/drive/folders/11CqUS8ZZt_8LgUDVElAmBL8S6wmuWjRk?usp=sharing", // Add your DSA quizzes folder link here
-            "IS": "https://drive.google.com/drive/folders/18c9qamPf5JkzjBEYCl56OO5rOsizZCzh?usp=sharing", // Add your Information Security quizzes folder link here
-            "PPS": "https://drive.google.com/drive/folders/1NNvJ0GF5ZZouwWMbS1ok7PRzeh4DtqhU?usp=sharing"  // Add your PPS quizzes folder link here
+            "AI": "https://drive.google.com/drive/folders/18-PpjWiLjCqH3J-vKLqASgbk46ACDLx7?usp=sharing",
+            "CN": "https://drive.google.com/drive/folders/1pvgXSCMpqvUhzStf0rOgK2mv3BVeP2m8?usp=sharing",
+            "SE": "https://drive.google.com/drive/folders/1YojNtalz1sBdoFMFLGdMLl-6NQ8ZgsZN?usp=sharing",
+            "DSA": "https://drive.google.com/drive/folders/11CqUS8ZZt_8LgUDVElAmBL8S6wmuWjRk?usp=sharing",
+            "IS": "https://drive.google.com/drive/folders/18c9qamPf5JkzjBEYCl56OO5rOsizZCzh?usp=sharing",
+            "PPS": "https://drive.google.com/drive/folders/1NNvJ0GF5ZZouwWMbS1ok7PRzeh4DtqhU?usp=sharing"
         };
 
         const subjects = Object.keys(subjectMap);
